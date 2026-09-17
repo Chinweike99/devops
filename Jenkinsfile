@@ -24,6 +24,19 @@ pipeline {
         	sh 'echo "Workspace: $WORKSPACE"'
         	sh 'echo "Node: $NODE_NAME"'
     	   }
+	}
+	
+	stage('Environment Experiment') {
+            steps {
+                script {
+                    echo "Jenkins build number: ${env.BUILD_NUMBER}"
+                }
+
+                sh '''
+                    echo "Shell sees build number as:"
+                    echo $BUILD_NUMBER
+                '''
+           }   
 	}	
 
         stage('Install Dependencies') {
