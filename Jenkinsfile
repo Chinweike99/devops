@@ -16,6 +16,16 @@ pipeline {
             }
         }
 
+	stage('Jenkins Environment') {
+    	    steps {
+        	sh 'echo "Job: $JOB_NAME"'
+        	sh 'echo "Build number: $BUILD_NUMBER"'
+        	sh 'echo "Build ID: $BUILD_ID"'
+        	sh 'echo "Workspace: $WORKSPACE"'
+        	sh 'echo "Node: $NODE_NAME"'
+    	   }
+	}	
+
         stage('Install Dependencies') {
             steps {
                 sh 'npm ci'
