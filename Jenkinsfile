@@ -33,13 +33,41 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'npm test'
+                sh 'npm test -- --test-reporter=junit --test-reporter-destination=test-results.xml'
+            }
+
+            post {
+                always {
+                    junit(
+                        testResults: 'test-results.xml',
+                        allowEmptyResults: true
+                    )
+                }
             }
         }
 
         stage('Build') {
             steps {
-                echo "Building ${env.APP_NAME}"
+                sh '''
+                    mkdir -p dist
+                    cp src/calculator.js dist/calculator.js
+                    echo "Build number: $BUILD_NUMBER" > dist/build-info.txt
+                '''
+            }
+        }
+
+        stage('Archive Artifact') {
+            steps {
+                archiveArtifacts(
+                    artifacts: 'dist/**',
+                    fingerprint: true
+                )
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t jenkins-learning-app:$BUILD_NUMBER .'
             }
         }
     }
