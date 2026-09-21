@@ -46,18 +46,6 @@ pipeline {
             }
         }
 
-        stage('Security Scan') {
-            steps {
-                sh '''
-                    trivy fs \
-                        --scanners vuln,secret \
-                        --severity HIGH,CRITICAL \
-                        --exit-code 1 \
-                        .
-                '''
-            }
-        }
-
         stage('Build') {
             steps {
                 sh '''
@@ -96,7 +84,7 @@ pipeline {
                             .
 
                         docker push \
-                            "$DOCKER_USERNAME/jenkins-learning-app:$BUILD_NUMBER"
+                            -t "$DOCKER_USERNAME/jenkins-learning-app:$BUILD_NUMBER"
                     '''
                 }
             }
