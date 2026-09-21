@@ -65,28 +65,9 @@ pipeline {
             }
         }
 
-        stage('Docker Build and Push') {
+        stage('Docker Build') {
             steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'dockerhub-credentials',
-                        usernameVariable: 'DOCKER_USERNAME',
-                        passwordVariable: 'DOCKER_PASSWORD'
-                    )
-                ]) {
-                    sh '''
-                        echo "$DOCKER_PASSWORD" | docker login \
-                            -u "$DOCKER_USERNAME" \
-                            --password-stdin
-
-                        docker build \
-                            -t "$DOCKER_USERNAME/jenkins-learning-app:$BUILD_NUMBER" \
-                            .
-
-                        docker push \
-                            -t "$DOCKER_USERNAME/jenkins-learning-app:$BUILD_NUMBER"
-                    '''
-                }
+                sh 'docker build -t jenkins-learning-app:$BUILD_NUMBER .'
             }
         }
     }
